@@ -15,6 +15,7 @@ namespace timeSight
     {
         public timeSight()
         {
+            this.AutoScaleMode = AutoScaleMode.None;
             InitializeComponent();
         }
 
@@ -40,45 +41,93 @@ namespace timeSight
         }
         #endregion
 
+        #region repositionButtons
+        private void verticalButtons()
+        {
+            int spacing = 10;
+            //int buttonSize = 70;
 
+            navUser.Location = new Point(10, spacing);
+            navGallery.Location = new Point(10, navUser.Bottom + (spacing * 2));
+            navCalendar.Location = new Point(10, navGallery.Bottom + spacing);
+            navTimeline.Location = new Point(10, navCalendar.Bottom + spacing);
+        }
+
+        private void horizontalButtons()
+        {
+            int spacing = 10;
+            //int buttonSize = 70;
+
+            navGallery.Location = new Point(spacing, 10);
+            navCalendar.Location = new Point(navGallery.Right + spacing, 10);
+            navTimeline.Location = new Point(navCalendar.Right + spacing, 10);
+            navUser.Location = new Point(navTimeline.Right + (spacing * 2), 10);
+        }
+        #endregion
 
         #region snapToEdge
         private void SnapToMiddle()
         {
             int screenWidth = this.ClientSize.Width; // Why is 'this' here? What does it do?
             int screenHeight = this.ClientSize.Height;
-            int panelWidth = panelNavbar.Width;
-            int panelHeight = panelNavbar.Height;
+            //int panelWidth = panelNavbar.Width;
+            //int panelHeight = panelNavbar.Height;
 
             // Define distance to edges
             int leftDistance = panelNavbar.Left;
-            int rightDistance = screenWidth - (panelNavbar.Left + panelWidth);
+            int rightDistance = screenWidth - (panelNavbar.Left + panelNavbar.Width);
             int topDistance = panelNavbar.Top;
-            int bottomDistance = screenHeight - (panelNavbar.Top + panelHeight);
+            int bottomDistance = screenHeight - (panelNavbar.Top + panelNavbar.Height);
 
             int minDistance = Math.Min(Math.Min(leftDistance, rightDistance), Math.Min(topDistance, bottomDistance));
 
             if (minDistance == leftDistance)
             {
-                //panelNavbar.Dock = DockStyle.Left;
+                panelNavbar.Size = new Size(90, 340);  // Resize first
+                int panelWidth = panelNavbar.Width;    // Refresh size variables
+                int panelHeight = panelNavbar.Height;
+
                 panelNavbar.Left = 0;
                 panelNavbar.Top = (screenHeight - panelHeight) / 2;
+
+                verticalButtons();
             }
             else if (minDistance == rightDistance)
             {
+                panelNavbar.Size = new Size(90, 340);
+                int panelWidth = panelNavbar.Width;
+                int panelHeight = panelNavbar.Height;
+
                 panelNavbar.Left = screenWidth - panelWidth;
                 panelNavbar.Top = (screenHeight - panelHeight) / 2;
+
+                verticalButtons();
             }
             else if (minDistance == topDistance)
             {
+                panelNavbar.Size = new Size(340, 90);
+                int panelWidth = panelNavbar.Width;
+                int panelHeight = panelNavbar.Height;
+
                 panelNavbar.Top = 0;
                 panelNavbar.Left = (screenWidth - panelWidth) / 2;
+
+                horizontalButtons();
             }
             else
             {
+                panelNavbar.Size = new Size(340, 90);
+                int panelWidth = panelNavbar.Width;
+                int panelHeight = panelNavbar.Height;
+
                 panelNavbar.Top = screenHeight - panelHeight;
                 panelNavbar.Left = (screenWidth - panelWidth) / 2;
+
+                horizontalButtons();
             }
+
+
+            panelNavbar.BackColor = Color.Gray;
         }
 
         #endregion
@@ -107,7 +156,7 @@ namespace timeSight
             // Set new collapsed size
             int collapsedSize = 80; // Diameter of the circular shape
             panelNavbar.Size = new Size(collapsedSize, collapsedSize);
-            panelNavbar.BackColor = Color.Aqua;
+            panelNavbar.BackColor = Color.BlueViolet;
 
             // Create a circular region
             GraphicsPath path = new GraphicsPath();
